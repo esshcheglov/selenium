@@ -1,0 +1,56 @@
+Exercise / execute search and verify result
+1. open google.com
+2. put text "bogota" to search field
+3. press Enter search button
+
+Expected results: word "Bogota" are present in the first result row
+
+====
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.Test;
+
+import java.io.File;
+import java.util.List;
+
+import static java.lang.Thread.sleep;
+import static org.testng.Assert.assertEquals;
+
+public class SearchTest {
+    @Test
+    public void openGoogleComInChromeTest(){
+        File file = new File("src/test/resources/chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", file.getAbsolutePath());
+        WebDriver driver = new ChromeDriver();
+        driver.navigate().to("https://www.google.com/");
+        WebElement searchField = driver.findElement(By.name("q"));
+        searchField.click();
+        searchField.sendKeys("bogota");
+        searchField.sendKeys(Keys.RETURN);
+        WebElement resultRow = driver.findElement(By.xpath("//*[@class = 'GyAeWb']//h3"));
+        assertEquals(resultRow.getText(), "Bogota", "not Bogota word");
+        System.out.println(resultRow.getText());
+        System.out.println(resultRow.getAttribute("class"));
+        driver.quit();
+
+    }
+}
+
+java.lang.AssertionError: not Bogota word 
+Expected :Bogota
+Actual   :¡Bogotá, más cerca de la gente! | Bogota.gov.co
+
+===============================================
+Default Suite
+Total tests run: 1, Passes: 0, Failures: 1, Skips: 0
+===============================================
+
+
+Process finished with exit code 0
