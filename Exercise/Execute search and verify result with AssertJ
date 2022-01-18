@@ -1,0 +1,47 @@
+Execute search and verify result with AssertJ
+1. open google.com
+2. put text "bogota" to search field
+3. press Enter search button
+
+Expected results: ¡Bogotá, más cerca de la gente! | Bogota.gov.co are present in the first result row
+
+====
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.annotations.Test;
+
+import java.io.File;
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class SearchTest {
+    @Test
+    public void openGoogleComInChromeTest(){
+        File file = new File("src/test/resources/chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", file.getAbsolutePath());
+        WebDriver driver = new ChromeDriver();
+        driver.navigate().to("https://www.google.com/");
+        WebElement searchField = driver.findElement(By.name("q"));
+        searchField.click();
+        searchField.sendKeys("bogota");
+        searchField.sendKeys(Keys.RETURN);
+        WebElement resultRow = driver.findElement(By.xpath("//*[@class = 'GyAeWb']//h3"));
+        assertThat(resultRow.isDisplayed()).as("Element displayed").isTrue();
+        assertThat(resultRow.getText()).as("Wrong text").isEqualTo("¡Bogotá, más cerca de la gente! | Bogota.gov.co");
+        assertThat(resultRow.getAttribute("class")).as("Wrong attribute text").contains("LC20lb MBeuO DKV0Md");
+        driver.quit();
+
+    }
+}
+
+
+===============================================
+Default Suite
+Total tests run: 1, Passes: 1, Failures: 0, Skips: 0
+===============================================
+
+
+Process finished with exit code 0
